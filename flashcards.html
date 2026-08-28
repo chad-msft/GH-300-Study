@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Twenty-one interactive flash cards for the GH-300 GitHub Copilot certification exam.">
+  <title>GH-300 Flash Cards</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background:
+        linear-gradient(var(--cp-accent-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--cp-accent-soft) 1px, transparent 1px),
+        var(--cp-bg);
+      background-size: 32px 32px;
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    button, select { font: inherit; }
+    button, a, select { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible, select:focus-visible {
+      outline: 3px solid var(--cp-warning);
+      outline-offset: 3px;
+    }
+
+    .app {
+      width: min(100% - 32px, 960px);
+      margin: 0 auto;
+      padding: 32px 0 40px;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--cp-accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 8vw, 3.75rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 600px;
+      margin: 12px 0 0;
+      color: var(--cp-text-muted);
+      line-height: 1.5;
+    }
+
+    .count-mark {
+      flex: 0 0 auto;
+      color: var(--cp-accent);
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) auto auto;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-panel-strong);
+    }
+
+    .field { display: grid; gap: 5px; }
+    .field label {
+      color: var(--cp-text-muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    select, .tool-button, .nav-button {
+      min-height: 42px;
+      border: 1px solid var(--cp-border-strong);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      cursor: pointer;
+    }
+
+    select { width: 100%; padding: 0 38px 0 12px; }
+    .tool-button { padding: 0 15px; font-weight: 650; }
+    .tool-button:hover, .nav-button:hover { background: var(--cp-surface-soft); }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .progress-track {
+      height: 8px;
+      flex: 1;
+      overflow: hidden;
+      border-radius: 0.625rem;
+      background: var(--cp-border);
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: var(--cp-accent);
+      transition: width 220ms ease;
+    }
+
+    .progress-text {
+      min-width: 74px;
+      color: var(--cp-text-muted);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .card-stage { perspective: 1200px; }
+
+    .flashcard {
+      position: relative;
+      width: 100%;
+      min-height: 440px;
+      padding: 0;
+      border: 0;
+      border-radius: 16px;
+      background: transparent;
+      color: var(--cp-text);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      transition: transform 480ms cubic-bezier(.2, .75, .25, 1);
+    }
+
+    .flashcard.is-flipped .card-inner { transform: rotateY(180deg); }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      padding: clamp(24px, 5vw, 48px);
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      box-shadow: var(--cp-shadow);
+      backface-visibility: hidden;
+    }
+
+    .card-back { transform: rotateY(180deg); }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .category {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border: 1px solid var(--cp-accent);
+      border-radius: 0.625rem;
+      color: var(--cp-accent);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .card-number { color: var(--cp-text-muted); font-variant-numeric: tabular-nums; }
+
+    .term {
+      margin: 0 0 20px;
+      color: var(--cp-accent);
+      font-size: clamp(1.8rem, 6vw, 3.25rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .question {
+      max-width: 760px;
+      margin: auto 0;
+      font-size: clamp(1.25rem, 3.5vw, 2rem);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .flip-hint {
+      margin: 24px 0 0;
+      color: var(--cp-text-muted);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    .answer-label, .why-label {
+      margin: 0 0 7px;
+      color: var(--cp-text-muted);
+      font-size: 0.75rem;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+
+    .answer {
+      margin: 0 0 22px;
+      font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+      font-weight: 650;
+      line-height: 1.42;
+    }
+
+    .why {
+      margin: 0 0 24px;
+      color: var(--cp-text-soft);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .learn-link {
+      align-self: flex-start;
+      margin-top: auto;
+      color: var(--cp-link);
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 52px 1fr 52px;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .nav-button {
+      display: grid;
+      place-items: center;
+      padding: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .flip-button {
+      min-height: 48px;
+      border: 1px solid var(--cp-accent);
+      border-radius: 0.625rem;
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .flip-button:hover { background: var(--cp-accent-hover); }
+
+    .shortcut-note {
+      margin: 12px 0 0;
+      color: var(--cp-text-muted);
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    .empty-state {
+      display: none;
+      min-height: 440px;
+      place-items: center;
+      border: 1px dashed var(--cp-border-strong);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .app { width: min(100% - 20px, 960px); padding-top: 20px; }
+      header { align-items: start; }
+      .count-mark { font-size: 2rem; }
+      .toolbar { grid-template-columns: 1fr 1fr; }
+      .field { grid-column: 1 / -1; }
+      .flashcard, .empty-state { min-height: 510px; }
+      .card-face { padding: 24px; }
+      .shortcut-note { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card-inner, .progress-fill { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <p class="eyebrow">GitHub Copilot Certification</p>
+        <h1>GH-300 Flash Cards</h1>
+        <p class="subtitle">Twenty-one focused questions across the current exam objectives. Flip each card for the answer, reasoning, and an official source.</p>
+      </div>
+      <div class="count-mark" aria-hidden="true">21</div>
+    </header>
+
+    <section class="toolbar" aria-label="Study controls">
+      <div class="field">
+        <label for="categoryFilter">Objective area</label>
+        <select id="categoryFilter">
+          <option value="All">All objective areas</option>
+        </select>
+      </div>
+      <button class="tool-button" id="shuffleButton" type="button" title="Shuffle cards">Shuffle</button>
+      <button class="tool-button" id="resetButton" type="button" title="Restore original order">Reset</button>
+    </section>
+
+    <div class="progress-row" aria-label="Deck progress">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-text" id="progressText">1 of 21</span>
+    </div>
+
+    <section class="card-stage" aria-live="polite">
+      <article class="flashcard" id="flashcard">
+        <span class="card-inner">
+          <span class="card-face card-front" id="cardFront">
+            <span class="card-meta">
+              <span class="category" id="frontCategory"></span>
+              <span class="card-number" id="frontNumber"></span>
+            </span>
+            <span class="term" id="term"></span>
+            <span class="question" id="question"></span>
+            <span class="flip-hint">Select the card to reveal the answer</span>
+          </span>
+          <span class="card-face card-back" id="cardBack" aria-hidden="true">
+            <span class="card-meta">
+              <span class="category" id="backCategory"></span>
+              <span class="card-number" id="backNumber"></span>
+            </span>
+            <span class="answer-label">Answer</span>
+            <span class="answer" id="answer"></span>
+            <span class="why-label">Why this is correct</span>
+            <span class="why" id="why"></span>
+            <a class="learn-link" id="source" href="#" target="_blank" rel="noopener noreferrer">Read the official documentation</a>
+          </span>
+        </span>
+      </article>
+      <div class="empty-state" id="emptyState">No cards match this objective area.</div>
+    </section>
+
+    <nav class="controls" aria-label="Flash card navigation">
+      <button class="nav-button" id="previousButton" type="button" aria-label="Previous card" title="Previous card">&#8592;</button>
+      <button class="flip-button" id="flipButton" type="button">Show answer</button>
+      <button class="nav-button" id="nextButton" type="button" aria-label="Next card" title="Next card">&#8594;</button>
+    </nav>
+    <p class="shortcut-note">Keyboard: left/right to navigate, space to flip, S to shuffle</p>
+  </main>
+
+  <script>
+    const cards = [
+      {
+        term: "Responsible AI",
+        category: "Responsible use",
+        question: "What principle should guide every use of AI-generated code?",
+        answer: "A human remains accountable for reviewing, validating, and safely using the output.",
+        why: "Copilot produces suggestions, not guarantees. Responsible use requires human oversight because generated code can be incorrect, insecure, biased, or unsuitable for the intended context.",
+        source: "https://learn.microsoft.com/training/modules/responsible-ai-with-github-copilot/"
+      },
+      {
+        term: "Output validation",
+        category: "Responsible use",
+        question: "What should you do before accepting a Copilot suggestion into production code?",
+        answer: "Review it, understand it, test it, and check it against security and project requirements.",
+        why: "Large language models predict plausible output and can hallucinate. Independent validation catches functional defects, vulnerable patterns, and dependencies or APIs that do not exist.",
+        source: "https://docs.github.com/copilot/responsible-use-of-github-copilot-features"
+      },
+      {
+        term: "Inline suggestions",
+        category: "Copilot features",
+        question: "Which Copilot interaction predicts code directly in the editor as you type?",
+        answer: "Inline suggestions, also called code completion.",
+        why: "Copilot uses the code and comments around the cursor as context, then displays one or more proposed completions that you can accept, reject, or partially accept.",
+        source: "https://docs.github.com/copilot/using-github-copilot/getting-code-suggestions-in-your-ide-with-github-copilot"
+      },
+      {
+        term: "Copilot Chat",
+        category: "Copilot features",
+        question: "When is Copilot Chat more appropriate than an inline suggestion?",
+        answer: "When you need a conversational explanation, analysis, plan, or multi-step response rather than a completion at the cursor.",
+        why: "Chat accepts natural-language questions and broader context, making it suitable for explaining code, comparing approaches, debugging, and discussing changes before applying them.",
+        source: "https://docs.github.com/copilot/using-github-copilot/copilot-chat/asking-github-copilot-questions-in-your-ide"
+      },
+      {
+        term: "Agent mode",
+        category: "Copilot features",
+        question: "What distinguishes agent mode from a standard chat response?",
+        answer: "Agent mode can autonomously plan and perform multi-step work, including editing files and invoking tools, while iterating toward a goal.",
+        why: "A standard response mainly advises or proposes code. Agent mode operates across the development environment, observes results, and adapts its next action under user-granted permissions.",
+        source: "https://code.visualstudio.com/docs/agents/overview"
+      },
+      {
+        term: "Copilot Edits",
+        category: "Copilot features",
+        question: "What problem is Copilot Edits designed to solve?",
+        answer: "Making coordinated, reviewable changes across multiple files from one natural-language request.",
+        why: "Edits combines conversational instructions with a working set of files so related modifications can be proposed together and reviewed before acceptance.",
+        source: "https://code.visualstudio.com/docs/copilot/chat/copilot-edits"
+      },
+      {
+        term: "Model Context Protocol",
+        category: "Copilot features",
+        question: "What does MCP add to a Copilot workflow?",
+        answer: "A standardized way for Copilot to discover and use external tools, services, and data sources.",
+        why: "MCP servers expose defined capabilities to an AI client. This extends Copilot beyond its built-in context while preserving a clear tool boundary and user-controlled configuration.",
+        source: "https://docs.github.com/copilot/customizing-copilot/extending-copilot-chat-with-mcp"
+      },
+      {
+        term: "GitHub Copilot CLI",
+        category: "Copilot features",
+        question: "Why would a developer use GitHub Copilot CLI?",
+        answer: "To get Copilot assistance for terminal tasks, commands, scripts, and file operations without leaving the command line.",
+        why: "The CLI reduces context switching and lets developers use natural language to understand commands or carry out terminal-oriented workflows interactively.",
+        source: "https://docs.github.com/copilot/github-copilot-in-the-cli"
+      },
+      {
+        term: "Sub-agents",
+        category: "Copilot features",
+        question: "Why delegate a focused task to a sub-agent?",
+        answer: "To isolate specialized work and its context while the primary agent coordinates the larger task.",
+        why: "Delegation can preserve the main context window, enable specialization, and return a concise result from a bounded investigation or implementation task.",
+        source: "https://learn.microsoft.com/credentials/certifications/resources/study-guides/gh-300"
+      },
+      {
+        term: "Custom instructions",
+        category: "Copilot features",
+        question: "How do repository custom instructions improve Copilot responses?",
+        answer: "They provide persistent project-specific guidance such as conventions, build commands, and preferred practices.",
+        why: "Instructions reduce repeated prompting and help Copilot tailor responses to repository expectations whenever the relevant instructions are applied.",
+        source: "https://docs.github.com/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot"
+      },
+      {
+        term: "Prompt files",
+        category: "Copilot features",
+        question: "What is the main benefit of a reusable prompt file?",
+        answer: "It captures a repeatable task and its instructions so teams can invoke a consistent workflow.",
+        why: "Reusable prompts improve consistency, reduce prompt-writing effort, and allow useful task patterns to be versioned and shared with the repository.",
+        source: "https://docs.github.com/copilot/customizing-copilot"
+      },
+      {
+        term: "Copilot code review",
+        category: "Copilot features",
+        question: "What role should Copilot play during code review?",
+        answer: "It should supplement human review by identifying possible defects, security concerns, and improvements.",
+        why: "Automated review can quickly surface patterns worth investigating, but it lacks full business context and does not replace accountable human approval.",
+        source: "https://docs.github.com/copilot/using-github-copilot/code-review/using-copilot-code-review"
+      },
+      {
+        term: "Organization policies",
+        category: "Copilot features",
+        question: "What can an organization administrator control through Copilot policies?",
+        answer: "Which Copilot features and capabilities members may use across supported environments.",
+        why: "Central policy controls allow an organization to align Copilot availability with governance, licensing, privacy, and security requirements; audit logs support oversight.",
+        source: "https://docs.github.com/copilot/managing-copilot/managing-github-copilot-in-your-organization"
+      },
+      {
+        term: "Prompt engineering",
+        category: "Prompting",
+        question: "What four elements generally make a Copilot prompt more effective?",
+        answer: "A clear goal, relevant context, explicit constraints, and criteria for an acceptable result.",
+        why: "Specific instructions narrow the model's possible responses. Supplying context and success criteria makes the desired output less ambiguous and easier to validate.",
+        source: "https://docs.github.com/copilot/using-github-copilot/copilot-chat/prompt-engineering-for-copilot-chat"
+      },
+      {
+        term: "Zero-shot prompting",
+        category: "Prompting",
+        question: "What makes a prompt zero-shot?",
+        answer: "It asks the model to perform a task without providing an example of the desired input-output pattern.",
+        why: "The model relies on its existing instruction-following ability and the supplied task description. This works well when the request and expected format are straightforward.",
+        source: "https://learn.microsoft.com/credentials/certifications/resources/study-guides/gh-300"
+      },
+      {
+        term: "Few-shot prompting",
+        category: "Prompting",
+        question: "When is few-shot prompting useful?",
+        answer: "When examples can clarify the expected style, structure, classification, or transformation better than instructions alone.",
+        why: "A small set of representative examples demonstrates the pattern to follow, reducing ambiguity and improving consistency for nuanced tasks.",
+        source: "https://learn.microsoft.com/credentials/certifications/resources/study-guides/gh-300"
+      },
+      {
+        term: "Context crafting",
+        category: "Prompting",
+        question: "Why should prompt context be relevant and intentionally scoped?",
+        answer: "Relevant context grounds the answer, while unnecessary context can distract the model or consume the available context window.",
+        why: "Copilot builds responses from the prompt and selected context. Precise files, symbols, constraints, and examples produce a stronger signal than an indiscriminate collection of data.",
+        source: "https://docs.github.com/copilot/using-github-copilot/copilot-chat/prompt-engineering-for-copilot-chat"
+      },
+      {
+        term: "Suggestion lifecycle",
+        category: "Data and architecture",
+        question: "At a high level, what happens between a developer request and a Copilot suggestion?",
+        answer: "Copilot gathers permitted context, builds and sends a prompt, processes the model response, applies filters, and returns a suggestion.",
+        why: "Understanding this flow explains why context selection affects quality and why policy, proxy, and post-processing safeguards can affect what reaches the editor.",
+        source: "https://resources.github.com/learn/pathways/copilot/essentials/how-github-copilot-handles-data/"
+      },
+      {
+        term: "Content exclusion",
+        category: "Privacy and safeguards",
+        question: "What does content exclusion do?",
+        answer: "It configures Copilot to ignore designated files or paths when providing supported suggestions or chat responses.",
+        why: "Exclusion helps organizations prevent specified sensitive or irrelevant content from informing Copilot, although behavior and scope depend on the feature and client.",
+        source: "https://docs.github.com/copilot/managing-copilot/configuring-and-auditing-content-exclusion"
+      },
+      {
+        term: "Public code matching",
+        category: "Privacy and safeguards",
+        question: "What happens when suggestions matching public code are blocked?",
+        answer: "Copilot checks suggestions against public code and suppresses a detected match instead of showing it to the user.",
+        why: "The filter gives organizations and users an additional safeguard for managing suggestions that may substantially match publicly available code.",
+        source: "https://docs.github.com/copilot/managing-copilot/configuring-and-auditing-content-exclusion"
+      },
+      {
+        term: "AI-assisted testing",
+        category: "Developer productivity",
+        question: "How should Copilot be used to improve a test suite?",
+        answer: "Use it to draft unit and integration tests, identify edge cases, and suggest assertions, then run and review every test.",
+        why: "Copilot can accelerate test creation and broaden scenario coverage, but execution and human review are necessary to confirm that tests are meaningful, deterministic, and correct.",
+        source: "https://learn.microsoft.com/training/modules/develop-unit-tests-using-github-copilot-tools/"
+      }
+    ];
+
+    const flashcard = document.getElementById("flashcard");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
+    const flipButton = document.getElementById("flipButton");
+    const emptyState = document.getElementById("emptyState");
+    const cardFront = document.getElementById("cardFront");
+    const cardBack = document.getElementById("cardBack");
+    let deck = [...cards];
+    let filteredDeck = [...deck];
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    const fields = {
+      frontCategory: document.getElementById("frontCategory"),
+      backCategory: document.getElementById("backCategory"),
+      frontNumber: document.getElementById("frontNumber"),
+      backNumber: document.getElementById("backNumber"),
+      term: document.getElementById("term"),
+      question: document.getElementById("question"),
+      answer: document.getElementById("answer"),
+      why: document.getElementById("why"),
+      source: document.getElementById("source")
+    };
+
+    [...new Set(cards.map(card => card.category))].sort().forEach(category => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      categoryFilter.appendChild(option);
+    });
+
+    function setFlipped(value) {
+      isFlipped = value;
+      flashcard.classList.toggle("is-flipped", isFlipped);
+      cardFront.setAttribute("aria-hidden", String(isFlipped));
+      cardBack.setAttribute("aria-hidden", String(!isFlipped));
+      flipButton.textContent = isFlipped ? "Show question" : "Show answer";
+    }
+
+    function renderCard() {
+      const hasCards = filteredDeck.length > 0;
+      flashcard.style.display = hasCards ? "block" : "none";
+      emptyState.style.display = hasCards ? "none" : "grid";
+      document.querySelector(".controls").style.display = hasCards ? "grid" : "none";
+
+      if (!hasCards) {
+        progressText.textContent = "0 of 0";
+        progressFill.style.width = "0%";
+        return;
+      }
+
+      const card = filteredDeck[currentIndex];
+      const number = `${currentIndex + 1} / ${filteredDeck.length}`;
+      fields.frontCategory.textContent = card.category;
+      fields.backCategory.textContent = card.category;
+      fields.frontNumber.textContent = number;
+      fields.backNumber.textContent = number;
+      fields.term.textContent = card.term;
+      fields.question.textContent = card.question;
+      fields.answer.textContent = card.answer;
+      fields.why.textContent = card.why;
+      fields.source.href = card.source;
+      progressText.textContent = `${currentIndex + 1} of ${filteredDeck.length}`;
+      progressFill.style.width = `${((currentIndex + 1) / filteredDeck.length) * 100}%`;
+      setFlipped(false);
+    }
+
+    function moveCard(direction) {
+      if (!filteredDeck.length) return;
+      currentIndex = (currentIndex + direction + filteredDeck.length) % filteredDeck.length;
+      renderCard();
+    }
+
+    function applyFilter() {
+      filteredDeck = categoryFilter.value === "All"
+        ? [...deck]
+        : deck.filter(card => card.category === categoryFilter.value);
+      currentIndex = 0;
+      renderCard();
+    }
+
+    function shuffleDeck() {
+      for (let index = deck.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [deck[index], deck[randomIndex]] = [deck[randomIndex], deck[index]];
+      }
+      applyFilter();
+    }
+
+    flashcard.addEventListener("click", event => {
+      if (event.target.closest("a")) return;
+      setFlipped(!isFlipped);
+    });
+    flipButton.addEventListener("click", () => setFlipped(!isFlipped));
+    document.getElementById("previousButton").addEventListener("click", () => moveCard(-1));
+    document.getElementById("nextButton").addEventListener("click", () => moveCard(1));
+    document.getElementById("shuffleButton").addEventListener("click", shuffleDeck);
+    document.getElementById("resetButton").addEventListener("click", () => {
+      deck = [...cards];
+      categoryFilter.value = "All";
+      applyFilter();
+    });
+    categoryFilter.addEventListener("change", applyFilter);
+
+    document.addEventListener("keydown", event => {
+      if (event.target.matches("select")) return;
+      if (event.key === "ArrowLeft") moveCard(-1);
+      if (event.key === "ArrowRight") moveCard(1);
+      if (event.key === " ") {
+        event.preventDefault();
+        setFlipped(!isFlipped);
+      }
+      if (event.key.toLowerCase() === "s") shuffleDeck();
+    });
+
+    renderCard();
+  </script>
+</body>
+</html>
