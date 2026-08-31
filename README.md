@@ -4,6 +4,7 @@ A community-maintained study guide for **Exam GH-300: GitHub Copilot**. Use this
 
 > [!NOTE]
 > Exam objectives can change. This guide reflects the official outline available on **August 28, 2026**. Always compare it with the [official GH-300 study guide](https://learn.microsoft.com/credentials/certifications/resources/study-guides/gh-300) before scheduling your exam.
+> [Benyamin Famili's perspective](/Benyamin.md)
 
 ## Certification overview
 

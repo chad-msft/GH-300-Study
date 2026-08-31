@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Twenty-one interactive flash cards for the GH-300 GitHub Copilot certification exam.">
+  <meta name="description" content="Interactive flash cards for the GH-300 GitHub Copilot certification exam.">
   <title>GH-300 Flash Cards</title>
   <script>
     (() => {
@@ -378,9 +378,9 @@
       <div>
         <p class="eyebrow">GitHub Copilot Certification</p>
         <h1>GH-300 Flash Cards</h1>
-        <p class="subtitle">Twenty-one focused questions across the current exam objectives. Flip each card for the answer, reasoning, and an official source.</p>
+        <p class="subtitle"><span id="deckSizeText">30</span> focused questions across the current exam objectives. Flip each card for the answer, reasoning, and an official source.</p>
       </div>
-      <div class="count-mark" aria-hidden="true">21</div>
+      <div class="count-mark" id="deckSizeMark" aria-hidden="true">30</div>
     </header>
 
     <section class="toolbar" aria-label="Study controls">
@@ -396,7 +396,7 @@
 
     <div class="progress-row" aria-label="Deck progress">
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-      <span class="progress-text" id="progressText">1 of 21</span>
+      <span class="progress-text" id="progressText">1 of 30</span>
     </div>
 
     <section class="card-stage" aria-live="polite">
@@ -604,6 +604,78 @@
         answer: "Use it to draft unit and integration tests, identify edge cases, and suggest assertions, then run and review every test.",
         why: "Copilot can accelerate test creation and broaden scenario coverage, but execution and human review are necessary to confirm that tests are meaningful, deterministic, and correct.",
         source: "https://learn.microsoft.com/training/modules/develop-unit-tests-using-github-copilot-tools/"
+      },
+      {
+        term: "Cloud Agent vs. Agent Mode",
+        category: "Copilot features",
+        question: "A developer wants Copilot to work asynchronously on GitHub and return a pull request. Should they use local agent mode or Copilot Cloud Agent?",
+        answer: "Use Copilot Cloud Agent.",
+        why: "Cloud Agent works independently in a GitHub Actions-powered environment and can prepare changes on a branch and open a pull request. IDE agent mode works synchronously in the developer's local environment.",
+        source: "https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-coding-agent"
+      },
+      {
+        term: "Scenario-based selection",
+        category: "Exam strategy",
+        question: "How should you approach a GH-300 question that describes several Copilot features but asks for the best one?",
+        answer: "Identify the user's goal, execution environment, required autonomy, governance constraints, and expected output before selecting the feature.",
+        why: "GH-300 emphasizes when and why to use a capability. Matching requirements to the feature's operating model is more reliable than choosing a familiar term from the scenario.",
+        source: "https://learn.microsoft.com/credentials/certifications/resources/study-guides/gh-300"
+      },
+      {
+        term: "Troubleshooting suggestions",
+        category: "Developer productivity",
+        question: "Copilot is not showing expected suggestions. What should you verify first?",
+        answer: "Check authentication and entitlement, extension and IDE status, network access, policy settings, content exclusions, and whether the file type is supported.",
+        why: "Suggestion failures can originate from the client, account, network, organizational policy, or repository configuration. Checking those layers systematically isolates the cause before reinstalling or changing code.",
+        source: "https://docs.github.com/en/copilot/how-tos/troubleshoot-copilot/troubleshoot-common-issues"
+      },
+      {
+        term: "AI-assisted refactoring",
+        category: "Developer productivity",
+        question: "What is the safest way to use Copilot for a substantial refactor?",
+        answer: "State the intended behavior and constraints, make reviewable changes, run tests and static analysis, and compare behavior before and after.",
+        why: "Refactoring should change structure without unintended behavior changes. Small, validated steps make generated edits easier to understand, review, and reverse when a regression appears.",
+        source: "https://learn.microsoft.com/credentials/certifications/resources/study-guides/gh-300"
+      },
+      {
+        term: "Guardrails",
+        category: "Privacy and safeguards",
+        question: "Why should an enterprise combine technical Copilot controls with responsible-use guidance?",
+        answer: "Technical controls enforce boundaries, while guidance and review practices address risks that settings alone cannot eliminate.",
+        why: "Policies, filters, exclusions, and permissions reduce exposure, but users still need to validate output, protect sensitive data, and apply organizational standards to each scenario.",
+        source: "https://learn.microsoft.com/training/modules/responsible-ai-with-github-copilot/"
+      },
+      {
+        term: "Security and privacy controls",
+        category: "Privacy and safeguards",
+        question: "Which controls should an administrator evaluate before enabling Copilot for sensitive repositories?",
+        answer: "Review feature policies, data handling, access permissions, content exclusions, public-code matching settings, and audit requirements.",
+        why: "These controls determine who can use Copilot, what repository content may inform it, how suggestions are filtered, and what activity administrators can monitor for governance.",
+        source: "https://docs.github.com/en/copilot/managing-copilot/managing-copilot-for-your-enterprise"
+      },
+      {
+        term: "Usage visibility",
+        category: "Governance",
+        question: "How can leaders evaluate Copilot adoption without relying only on anecdotal feedback?",
+        answer: "Use Copilot usage metrics and audit logs to review adoption, engagement, feature activity, and administrative events.",
+        why: "Metrics provide aggregate evidence about enablement and use, while audit logs provide traceability for supported policy and administrative actions. Together they support governance decisions.",
+        source: "https://docs.github.com/en/copilot/concepts/copilot-usage-metrics/copilot-metrics"
+      },
+      {
+        term: "Enterprise deployment",
+        category: "Governance",
+        question: "What is a sound approach for deploying GitHub Copilot across an enterprise?",
+        answer: "Define goals and policies, begin with a representative pilot, train users, measure outcomes, address risks, and expand in controlled phases.",
+        why: "A phased rollout tests assumptions in the organization's real environment and gives administrators time to refine licensing, controls, enablement, and support before broad adoption.",
+        source: "https://docs.github.com/en/copilot/rolling-out-github-copilot-at-scale"
+      },
+      {
+        term: "Plans and models",
+        category: "Exam strategy",
+        question: "How should you study Copilot pricing, plans, and model availability for GH-300?",
+        answer: "Learn the capability and governance differences from current official documentation instead of memorizing volatile prices or model lists.",
+        why: "Plans, pricing, model availability, and feature status evolve. Scenario questions are better answered by understanding who can enable a capability, where it runs, and what controls apply.",
+        source: "https://docs.github.com/en/copilot/get-started/plans-for-github-copilot"
       }
     ];
 
@@ -615,6 +687,8 @@
     const emptyState = document.getElementById("emptyState");
     const cardFront = document.getElementById("cardFront");
     const cardBack = document.getElementById("cardBack");
+    document.getElementById("deckSizeText").textContent = cards.length;
+    document.getElementById("deckSizeMark").textContent = cards.length;
     let deck = [...cards];
     let filteredDeck = [...deck];
     let currentIndex = 0;
